@@ -141,7 +141,8 @@ const PRODUCTS = [
     name: "Facial Kit",
     photo: "assets/product_images/Facial-kit.jpeg",
     size: "100g (4×25g)",
-    price: 999,
+    price: 249,
+    mrp: 499,
     category: "Face Kit",
     badge: "Face Kit",
     tint: "lavender",
@@ -157,12 +158,12 @@ const PRODUCTS = [
     size: "400g",
     price: 349,
     category: "Face Care",
-    badge: "Bestseller",
+    badge: "Coming Soon",
     tint: "lavender",
     short: "A gentle lavender-infused scrub that exfoliates without stripping skin.",
     description: "Our Lavender Scrub gently buffs away dullness and impurities while calming lavender extract soothes skin as it exfoliates. Regular use reveals a smoother, more even-toned complexion — without any harsh, stripping feeling.",
     ingredients: ["Lavender", "Walnut Shell Powder", "Aloe Vera"],
-    inStock: true
+    inStock: false
   },
   {
     id: "shea-almond-cream",
@@ -171,12 +172,12 @@ const PRODUCTS = [
     size: "400g",
     price: 399,
     category: "Face Care",
-    badge: "New",
+    badge: "Coming Soon",
     tint: "cream",
     short: "Rich, nourishing massage cream blending shea butter and almond oil.",
     description: "This deeply nourishing massage cream combines shea butter's intense moisture with almond oil's lightweight, fast-absorbing softness. Massage into skin for a calming ritual that leaves it supple, hydrated, and visibly healthier.",
     ingredients: ["Shea Butter", "Almond Oil", "Lavender"],
-    inStock: true
+    inStock: false
   },
   {
     id: "tea-tree-aloe-gel",
@@ -185,26 +186,26 @@ const PRODUCTS = [
     size: "400g",
     price: 299,
     category: "Face Care",
-    badge: null,
+    badge: "Coming Soon",
     tint: "sage",
     short: "Cooling aloe vera gel with clarifying tea tree oil.",
     description: "A lightweight, fast-absorbing gel that combines soothing aloe vera with clarifying tea tree oil. Perfect for calming irritation, hydrating without heaviness, and keeping breakouts in check.",
     ingredients: ["Tea Tree Oil", "Aloe Vera", "Vitamin E"],
-    inStock: true
+    inStock: false
   },
   {
     id: "kaolin-clay-pack",
     name: "Kaolin Clay Calm & Glow Face Pack",
-    photo: "assets/product_images/kaolin Clay.jpeg",
+    photo: "assets/product_images/Kaolin clay facepack.jpeg",
     size: "250g",
     price: 349,
     category: "Face Care",
-    badge: null,
+    badge: "Coming Soon",
     tint: "cream",
     short: "Mineral-rich kaolin clay pack for a calm, radiant glow.",
     description: "Our Calm & Glow Face Pack uses gentle kaolin clay to draw out impurities and excess oil without over-drying. Skin is left feeling clean, balanced, and visibly more radiant after every use.",
     ingredients: ["Kaolin Clay", "Lavender", "Aloe Vera"],
-    inStock: true
+    inStock: false
   }
 ];
 
@@ -434,5 +435,5 @@ const CHATBOT_FAQS = [
   { q: "ingredients what inside natural botanical", a: "Every formula is built on real botanicals — lavender, vitamin C, aloe vera, tea tree, shea butter, rosemary. Check our Ingredients page for details." },
   { q: "track order status where is my order", a: "You can track your order any time on our Track Order page using your order number and email." },
   { q: "payment method pay razorpay upi cod cash", a: "We accept UPI, cards, and netbanking via Razorpay, plus Cash on Delivery." },
-  { q: "contact human support help talk to someone", a: "Reach our small team directly at hello@lavenherbs.com, or use the Contact page — we read every message ourselves." }
+  { q: "contact human support help talk to someone", a: "Reach our small team directly at info@lavenherbs.in, or use the Contact page — we read every message ourselves." }
 ];

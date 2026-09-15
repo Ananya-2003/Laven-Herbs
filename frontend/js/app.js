@@ -366,9 +366,27 @@ function closeCart(){ $("#cartDrawer").classList.remove("open"); $("#scrim").cla
 $("#cartToggle").addEventListener("click", openCart);
 $("#cartClose").addEventListener("click", closeCart);
 
-function openMobileMenu(){ $("#mobileMenu").classList.add("open"); $("#scrim").classList.add("show"); }
+function openMobileMenu(){
+  $("#mobileMenu").classList.add("open"); $("#scrim").classList.add("show");
+  const authLink = document.getElementById('mobileMenuAuthLink');
+  const authLabel = document.getElementById('mobileMenuAuthLabel');
+  if(authLink && typeof firebase !== 'undefined' && firebase.auth().currentUser){
+    authLink.setAttribute('href', '#/account');
+    if(authLabel) authLabel.textContent = 'Account';
+  }else if(authLink){
+    authLink.setAttribute('href', '#/login');
+    if(authLabel) authLabel.textContent = 'Login';
+  }
+}
 function closeMobileMenu(){ $("#mobileMenu").classList.remove("open"); $("#scrim").classList.remove("show"); }
 $("#hamburgerBtn").addEventListener("click", openMobileMenu);
+const mobileMenuSearchBtn = document.getElementById('mobileMenuSearchBtn');
+if(mobileMenuSearchBtn){
+  mobileMenuSearchBtn.addEventListener('click', () => {
+    closeMobileMenu();
+    openSearch();
+  });
+}
 $("#mobileMenuClose").addEventListener("click", closeMobileMenu);
 
 $("#scrim").addEventListener("click", () => { closeCart(); closeMobileMenu(); closeSearch(); });
@@ -510,17 +528,29 @@ function initReveal(){
 /* =========================================================
    PAGE TEMPLATES
    ========================================================= */
+// function heroSprigs(){
+//   let out = "";
+//   const positions = [
+//     {t:"8%",l:"6%",s:60,r:-10}, {t:"58%",l:"88%",s:90,r:18}, {t:"14%",l:"78%",s:50,r:8}, {t:"78%",l:"14%",s:70,r:-16}
+//   ];
+//   positions.forEach(p => {
+//     out += `<img src="assets/logo-icon.png" alt="" style="top:${p.t};left:${p.l};width:${p.s}px;--r:${p.r}deg">`;
+//   });
+//   return out;
+// }
 function heroSprigs(){
   let out = "";
   const positions = [
-    {t:"8%",l:"6%",s:60,r:-10}, {t:"58%",l:"88%",s:90,r:18}, {t:"14%",l:"78%",s:50,r:8}, {t:"78%",l:"14%",s:70,r:-16}
+    {t:"8%",  l:"4%",  s:55, r:-10},
+    {t:"72%", l:"48%", s:70, r:12},
+    {t:"18%", l:"36%", s:42, r:8},
+    {t:"80%", l:"8%",  s:60, r:-16}
   ];
   positions.forEach(p => {
     out += `<img src="assets/logo-icon.png" alt="" style="top:${p.t};left:${p.l};width:${p.s}px;--r:${p.r}deg">`;
   });
   return out;
 }
-
 
 function ritualScene(){
   return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
@@ -546,12 +576,37 @@ function renderHome(){
   <section class="hero">
     <div class="hero-sprigs">${heroSprigs()}</div>
     <div class="hero-inner">
-      <span class="hero-eyebrow">Herbal Skincare &amp; Beauty</span>
-      <h1>Nature's Wisdom,<span class="line2">Botanically Refined</span></h1>
-      <p class="hero-sub">Herbal skincare rooted in ancient botanicals, crafted for modern rituals — by two founders who believe skin deserves the truth.</p>
-      <div class="hero-ctas">
-        <a href="#/shop" data-link class="btn btn-primary">Explore the Collection</a>
-        <a href="#/about" data-link class="btn btn-outline-light">Our Story</a>
+      <div class="hero-copy">
+        <span class="hero-eyebrow">Herbal Skincare &amp; Beauty</span>
+        <h1>Nature's Wisdom,<span class="line2">Botanically Refined</span></h1>
+        <p class="hero-sub">Herbal skincare rooted in ancient botanicals, crafted for modern rituals — by two founders who believe skin deserves the truth.</p>
+        <div class="hero-ctas">
+          <a href="#/shop" data-link class="btn btn-primary">Explore the Collection</a>
+          <a href="#/about" data-link class="btn btn-outline-light">Our Story</a>
+        </div>
+      </div>
+
+      <div class="hero-product-card" id="heroProductCard" data-open-pdp="facial-kit">
+        <div class="product-card-inner">
+          <span class="product-ribbon">Bestseller</span>
+          <span class="hover-hint">Tap to view →</span>
+          <div class="product-image-wrapper">
+            <img src="assets/product_images/Facial-kit.jpeg" alt="Laven Herbs Facial Kit">
+          </div>
+          <div class="product-card-eyebrow">Signature Ritual</div>
+          <h3 class="product-card-title">The Complete Facial Kit</h3>
+          <p class="product-card-sub">Scrub · Massage Cream · Aloe Gel · Face Pack</p>
+          <div class="product-card-bottom">
+            <div class="product-card-price">
+              <span class="mrp">₹499</span>
+              <span class="price">₹249</span>
+            </div>
+            <span class="product-card-cta">
+              View Product
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="hero-scroll">Scroll</div>
@@ -1047,7 +1102,11 @@ function renderContact(){
       <div class="reveal">
         <div class="contact-info-block">
           <h5>Email Us</h5>
-          <a href="mailto:hello@lavenherbs.com">hello@lavenherbs.com</a>
+          <a href="mailto:info@lavenherbs.in">info@lavenherbs.in</a>
+        </div>
+        <div class="contact-info-block">
+          <h5>Call / WhatsApp</h5>
+          <a href="https://wa.me/919520360398" target="_blank" rel="noopener">+91-9520360398</a>
         </div>
         <div class="contact-info-block">
           <h5>Response Hours</h5>
@@ -1308,10 +1367,6 @@ function renderOrderSuccess(){
 //       .catch(err => console.warn('Could not load saved address for autofill:', err));
 //   }
 
-//   // Auto-fill from saved profile/address for logged-in users.
-//   // If Firebase hasn't confirmed the session yet (e.g. right after a page
-//   // refresh), wait for the one-time auth check instead of reading a
-//   // possibly-still-null currentUser.
 //   if(firebase.auth().currentUser){
 //     applyCheckoutAutofill(firebase.auth().currentUser);
 //   }else{
@@ -1329,7 +1384,6 @@ function renderOrderSuccess(){
 //   });
 
 //   $("#payNowBtn").addEventListener("click", async () => {
-//     // 1. Ensure user is logged in before allowing checkout
 //     const currentUser = firebase.auth().currentUser;
 //     if (!currentUser) {
 //       showToast("Please log in or sign up to complete your order.", false);
@@ -1351,12 +1405,25 @@ function renderOrderSuccess(){
 
 //     if(payMethod === "cod"){
 //       const orderId = "LH-" + Date.now().toString().slice(-8);
-//       lastOrder = { id: orderId, method: "cod", customer, items: itemsSnapshot, subtotal, shipping, total, placedAt: Date.now() };
-      
-//       // Pass currentUser.uid explicitly here
-//       await saveOrderBestEffort({ orderId, method: "cod", customer, items: itemsSnapshot, subtotal, shipping, total }, currentUser.uid);
-//       Cart.clear();
-//       navigate(`#/order-success`);
+//       btn.disabled = true;
+//       btn.textContent = "Placing order…";
+//       try{
+//         const res = await fetch(`${RAZORPAY_CONFIG.API_BASE}/api/orders/cod`, {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
+//           body: JSON.stringify({ orderId, customer, items: itemsSnapshot, subtotal, shipping, total, userId: currentUser.uid })
+//         });
+//         const data = await res.json();
+//         if(!data.success) throw new Error(data.error || "Could not place order.");
+//         lastOrder = { id: orderId, method: "cod", customer, items: itemsSnapshot, subtotal, shipping, total, placedAt: Date.now() };
+//         Cart.clear();
+//         navigate(`#/order-success`);
+//       }catch(err){
+//         console.error(err);
+//         showToast("Could not place your order. Please try again.", false);
+//         btn.disabled = false;
+//         btn.textContent = originalLabel;
+//       }
 //       return;
 //     }
 
@@ -1366,9 +1433,9 @@ function renderOrderSuccess(){
 //       await LavenCheckout.pay({
 //         amountInRupees: total,
 //         customer,
-//         onSuccess: async (paymentId) => {
-//           lastOrder = { id: paymentId, method: "razorpay", customer, items: itemsSnapshot, subtotal, shipping, total, placedAt: Date.now() };
-//           await saveOrderBestEffort({ orderId: paymentId, method: "razorpay", customer, items: itemsSnapshot, subtotal, shipping, total }, currentUser.uid);
+//         orderData: { customer, items: itemsSnapshot, subtotal, shipping, total, userId: currentUser.uid },
+//         onSuccess: (orderId) => {
+//           lastOrder = { id: orderId, method: "razorpay", customer, items: itemsSnapshot, subtotal, shipping, total, placedAt: Date.now() };
 //           Cart.clear();
 //           navigate(`#/order-success`);
 //         },
@@ -1395,6 +1462,14 @@ function wireCheckoutPage(){
     if(!user) return;
     if(user.displayName) form.querySelector('[name="name"]').value = user.displayName;
     if(user.email) form.querySelector('[name="email"]').value = user.email;
+
+    // Fetch user profile info or latest address
+    firebase.firestore().collection('users').doc(user.uid).get()
+      .then(doc => {
+        if(doc.exists && doc.data().phone){
+          form.querySelector('[name="phone"]').value = doc.data().phone;
+        }
+      }).catch(err => console.warn('Could not load user phone:', err));
 
     firebase.firestore().collection('users').doc(user.uid).collection('addresses')
       .orderBy('updatedAt', 'desc').limit(1).get()
@@ -1448,14 +1523,42 @@ function wireCheckoutPage(){
     const originalLabel = btn.textContent;
     const itemsSnapshot = Cart.items.map(i => ({ ...i }));
 
+    // Prevent duplicate address saves by checking if it already exists
+    try {
+      const addressRef = firebase.firestore().collection('users').doc(currentUser.uid).collection('addresses');
+      const existingQuery = await addressRef
+        .where('address', '==', customer.address)
+        .where('pincode', '==', customer.pincode)
+        .get();
+
+      if(existingQuery.empty){
+        await addressRef.add({
+          name: customer.name,
+          phone: customer.phone,
+          address: customer.address,
+          city: customer.city,
+          state: customer.state,
+          pincode: customer.pincode,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } else {
+        await existingQuery.docs[0].ref.update({
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    } catch(e) {
+      console.warn("Could not save address to profile:", e);
+    }
+
+    const orderId = "LH-" + Date.now().toString().slice(-8);
+
     if(payMethod === "cod"){
-      const orderId = "LH-" + Date.now().toString().slice(-8);
       btn.disabled = true;
       btn.textContent = "Placing order…";
       try{
         const res = await fetch(`${RAZORPAY_CONFIG.API_BASE}/api/orders/cod`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
+          headers: { "Content-Type": "application/json", "ngrok-script-browser-warning": "true" },
           body: JSON.stringify({ orderId, customer, items: itemsSnapshot, subtotal, shipping, total, userId: currentUser.uid })
         });
         const data = await res.json();
@@ -1478,9 +1581,9 @@ function wireCheckoutPage(){
       await LavenCheckout.pay({
         amountInRupees: total,
         customer,
-        orderData: { customer, items: itemsSnapshot, subtotal, shipping, total, userId: currentUser.uid },
-        onSuccess: (orderId) => {
-          lastOrder = { id: orderId, method: "razorpay", customer, items: itemsSnapshot, subtotal, shipping, total, placedAt: Date.now() };
+        orderData: { orderId, customer, items: itemsSnapshot, subtotal, shipping, total, userId: currentUser.uid },
+        onSuccess: (confirmedOrderId) => {
+          lastOrder = { id: confirmedOrderId, method: "razorpay", customer, items: itemsSnapshot, subtotal, shipping, total, placedAt: Date.now() };
           Cart.clear();
           navigate(`#/order-success`);
         },
@@ -1496,7 +1599,7 @@ function wireCheckoutPage(){
       btn.disabled = false;
       btn.textContent = originalLabel;
     }
-  });
+});
 }
 
 /* ---------------- Extra informational pages ---------------- */
@@ -1560,7 +1663,7 @@ function renderShipping(){
     <div class="policy-block reveal">
       <h3>Returns &amp; Exchanges</h3>
       <p>We want you to love what you ordered. Unopened, unused products in their original packaging can be returned within 7 days of delivery for a full refund. Because of hygiene considerations, opened skincare products can't be returned unless the item arrived damaged or defective.</p>
-      <p>To start a return, email us at hello@lavenherbs.com with your order number — we'll arrange a pickup and process your refund within 5–7 business days of receiving the item back.</p>
+      <p>To start a return, email us at info@lavenherbs.in with your order number — we'll arrange a pickup and process your refund within 5–7 business days of receiving the item back.</p>
     </div>
     <div class="policy-block reveal">
       <h3>Damaged or Incorrect Items</h3>
@@ -1593,7 +1696,7 @@ function renderPrivacy(){
     </div>
     <div class="policy-block reveal">
       <h3>Your rights</h3>
-      <p>You can request a copy of the data we hold about you, or ask us to delete it, at any time by emailing hello@lavenherbs.com.</p>
+      <p>You can request a copy of the data we hold about you, or ask us to delete it, at any time by emailing info@lavenherbs.in.</p>
     </div>
   </section>`;
 }
@@ -1622,7 +1725,7 @@ function renderTerms(){
     </div>
     <div class="policy-block reveal">
       <h3>Contact</h3>
-      <p>Questions about these terms? Reach us at hello@lavenherbs.com.</p>
+      <p>Questions about these terms? Reach us at info@lavenherbs.in.</p>
     </div>
   </section>`;
 }
@@ -1647,42 +1750,161 @@ function renderTrackOrder(){
     <div id="trackOrderResult" style="margin-top:32px"></div>
   </section>`;
 }
-function wireTrackOrder(){
+// function wireTrackOrder(){
+//   const form = $("#trackOrderForm");
+//   if(!form) return;
+//   form.addEventListener("submit", async e => {
+//     e.preventDefault();
+//     const fd = new FormData(form);
+//     const orderId = fd.get("orderId").trim();
+//     const email = fd.get("email").trim().toLowerCase();
+//     const result = $("#trackOrderResult");
+//     result.innerHTML = `<p class="account-empty-note">Searching…</p>`;
+
+//     try{
+//       const doc = await firebase.firestore().collection('orders').doc(orderId).get();
+//       const data = doc.exists ? doc.data() : null;
+//       const matches = data && data.customer && data.customer.email && data.customer.email.toLowerCase() === email;
+
+//       if(matches){
+//         result.innerHTML = `
+//           <div class="co-section">
+//             <h3><i>${ICONS.check}</i>Order Found</h3>
+//             ${orderStatusTracker(statusToStep(data.status))}
+//             <p style="margin-top:20px;color:var(--ink-soft);font-size:14px">Status: <strong>${(data.status||'placed')}</strong></p>
+//           </div>`;
+//       }else{
+//         result.innerHTML = `
+//           <div class="co-section" style="text-align:center">
+//             <p style="color:var(--ink-soft);font-family:var(--accent);font-style:italic;font-size:16px">We couldn't find a matching order.</p>
+//             <p style="color:var(--ink-faint);font-size:13px;margin-top:10px">Double-check your order number and email, or <a href="#/contact" data-link style="color:var(--purple-700);text-decoration:underline">contact us</a> directly.</p>
+//           </div>`;
+//       }
+//     }catch(err){
+//       console.error(err);
+//       result.innerHTML = `<div class="co-section" style="text-align:center"><p style="color:var(--err)">Something went wrong looking up your order. Please try again or contact us.</p></div>`;
+//     }
+//   });
+// }
+
+function wireTrackOrder() {
   const form = $("#trackOrderForm");
-  if(!form) return;
-  form.addEventListener("submit", async e => {
+
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const fd = new FormData(form);
-    const orderId = fd.get("orderId").trim();
+
+    // Strip leading # symbol so it matches Firestore document IDs correctly
+    let orderId = fd.get("orderId").trim();
+    orderId = orderId.replace(/^#/, "").trim();
+
     const email = fd.get("email").trim().toLowerCase();
     const result = $("#trackOrderResult");
-    result.innerHTML = `<p class="account-empty-note">Searching…</p>`;
 
-    try{
-      const doc = await firebase.firestore().collection('orders').doc(orderId).get();
+    result.innerHTML = `
+      <p class="account-empty-note">Searching…</p>
+    `;
+
+    try {
+      const doc = await firebase
+        .firestore()
+        .collection("orders")
+        .doc(orderId)
+        .get();
+
       const data = doc.exists ? doc.data() : null;
-      const matches = data && data.customer && data.customer.email && data.customer.email.toLowerCase() === email;
 
-      if(matches){
+      const matches =
+        data &&
+        data.customer &&
+        data.customer.email &&
+        data.customer.email.toLowerCase().trim() === email;
+
+      if (matches) {
         result.innerHTML = `
           <div class="co-section">
-            <h3><i>${ICONS.check}</i>Order Found</h3>
+            <h3>
+              <i>${ICONS.check}</i>
+              Order Found
+            </h3>
+
             ${orderStatusTracker(statusToStep(data.status))}
-            <p style="margin-top:20px;color:var(--ink-soft);font-size:14px">Status: <strong>${(data.status||'placed')}</strong></p>
-          </div>`;
-      }else{
+
+            <p
+              style="
+                margin-top: 20px;
+                color: var(--ink-soft);
+                font-size: 14px;
+              "
+            >
+              Status:
+              <strong>${data.status || "placed"}</strong>
+            </p>
+          </div>
+        `;
+      } else {
         result.innerHTML = `
-          <div class="co-section" style="text-align:center">
-            <p style="color:var(--ink-soft);font-family:var(--accent);font-style:italic;font-size:16px">We couldn't find a matching order.</p>
-            <p style="color:var(--ink-faint);font-size:13px;margin-top:10px">Double-check your order number and email, or <a href="#/contact" data-link style="color:var(--purple-700);text-decoration:underline">contact us</a> directly.</p>
-          </div>`;
+          <div
+            class="co-section"
+            style="text-align: center"
+          >
+            <p
+              style="
+                color: var(--ink-soft);
+                font-family: var(--accent);
+                font-style: italic;
+                font-size: 16px;
+              "
+            >
+              We couldn't find a matching order.
+            </p>
+
+            <p
+              style="
+                color: var(--ink-faint);
+                font-size: 13px;
+                margin-top: 10px;
+              "
+            >
+              Double-check your order number and email, or
+              <a
+                href="#/contact"
+                data-link
+                style="
+                  color: var(--purple-700);
+                  text-decoration: underline;
+                "
+              >
+                contact us
+              </a>
+              directly.
+            </p>
+          </div>
+        `;
       }
-    }catch(err){
+    } catch (err) {
       console.error(err);
-      result.innerHTML = `<div class="co-section" style="text-align:center"><p style="color:var(--err)">Something went wrong looking up your order. Please try again or contact us.</p></div>`;
+
+      result.innerHTML = `
+        <div
+          class="co-section"
+          style="text-align: center"
+        >
+          <p style="color: var(--err)">
+            Something went wrong looking up your order.
+            Please try again or contact us.
+          </p>
+        </div>
+      `;
     }
   });
 }
+
+
+
 
 function authCardHeader(mode){
   return `
@@ -2097,15 +2319,48 @@ function router(){
 }
 window.addEventListener("hashchange", router);
 
-/* newsletter dummy submit */
-$("#newsletterForm").addEventListener("submit", e => {
-  e.preventDefault();
-  showToast("You're on the list! Welcome to the ritual, glowing genius.");
-  e.target.reset();
-});
-
 /* ---------------- Init ---------------- */
 $("#year").textContent = new Date().getFullYear();
 Cart.load();
 Cart.render();
 router();
+
+
+
+
+/* ========== HERO CARD PARALLAX TILT ========== */
+// function initHeroParallax() {
+//   const card = document.getElementById('heroProductCard');
+//   if (!card) return;
+//   if (window.matchMedia('(max-width: 900px)').matches) return;
+//   if ('ontouchstart' in window) return;
+
+//   const inner = card.querySelector('.product-card-inner');
+//   const MAX_TILT = 8;
+//   const MAX_MOVE = 6;
+//   let rafId = null;
+
+//   function onMove(e) {
+//     if (rafId) cancelAnimationFrame(rafId);
+//     rafId = requestAnimationFrame(() => {
+//       const rect = card.getBoundingClientRect();
+//       const cx = rect.left + rect.width / 2;
+//       const cy = rect.top + rect.height / 2;
+//       const dx = (e.clientX - cx) / (rect.width / 2);
+//       const dy = (e.clientY - cy) / (rect.height / 2);
+//       const rotY = dx * MAX_TILT;
+//       const rotX = -dy * MAX_TILT;
+//       const moveX = dx * MAX_MOVE;
+//       const moveY = dy * MAX_MOVE;
+//       inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${moveX}px, ${moveY}px, 0)`;
+//       inner.style.setProperty('--glow-x', `${(dx + 1) * 50}%`);
+//       inner.style.setProperty('--glow-y', `${(dy + 1) * 50}%`);
+//     });
+//   }
+//   function onLeave() {
+//     if (rafId) cancelAnimationFrame(rafId);
+//     inner.style.transform = 'rotateX(0) rotateY(0) translate3d(0,0,0)';
+//   }
+//   card.addEventListener('mousemove', onMove);
+//   card.addEventListener('mouseleave', onLeave);
+// }

@@ -98,6 +98,47 @@ app.post("/api/orders/cod", async (req, res) => {
   }
 });
 
+// app.post("/api/orders/verify-and-save", async (req, res) => {
+//   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderData } = req.body;
+
+//   if(!razorpay_order_id || !razorpay_payment_id || !razorpay_signature){
+//     return res.status(400).json({ verified: false, error: "Missing payment fields." });
+//   }
+
+//   const expectedSignature = crypto
+//     .createHmac("sha256", KEY_SECRET || "placeholder_secret")
+//     .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+//     .digest("hex");
+
+//   const verified = expectedSignature === razorpay_signature;
+
+//   const rOrder = razorpayOrders.find(o => o.id === razorpay_order_id);
+//   if(rOrder) rOrder.status = verified ? "paid" : "verification_failed";
+
+//   if(!verified){
+//     return res.json({ verified: false });
+//   }
+
+//   if(!db){
+//     return res.json({ verified: true, orderId: razorpay_payment_id, warning: "Payment verified but order database isn't configured on the server yet." });
+//   }
+
+//   try{
+//     const { customer, items, subtotal, shipping, total, userId } = orderData || {};
+//     await db.collection("orders").doc(razorpay_payment_id).set({
+//       orderId: razorpay_payment_id, customer, items, subtotal, shipping, total,
+//       userId: userId || null,
+//       method: "razorpay",
+//       status: "placed",
+//       placedAt: FieldValue.serverTimestamp()
+//     });
+//     res.json({ verified: true, orderId: razorpay_payment_id });
+//   }catch(err){
+//     console.error("Order save after verified payment failed:", err.message);
+//     res.json({ verified: true, orderId: razorpay_payment_id, warning: "Payment succeeded but saving order details failed — contact support with your payment ID." });
+//   }
+// });
+
 app.post("/api/orders/verify-and-save", async (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderData } = req.body;
 
@@ -107,7 +148,7 @@ app.post("/api/orders/verify-and-save", async (req, res) => {
 
   const expectedSignature = crypto
     .createHmac("sha256", KEY_SECRET || "placeholder_secret")
-    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+    .update(razorpay_order_id + "|" + razorpay_payment_id)
     .digest("hex");
 
   const verified = expectedSignature === razorpay_signature;
@@ -119,23 +160,28 @@ app.post("/api/orders/verify-and-save", async (req, res) => {
     return res.json({ verified: false });
   }
 
+  // Always generate a clean LH- order ID for online payments
+  const finalOrderId = "LH-" + Date.now().toString().slice(-8);
+
   if(!db){
-    return res.json({ verified: true, orderId: razorpay_payment_id, warning: "Payment verified but order database isn't configured on the server yet." });
+    return res.json({ verified: true, orderId: finalOrderId, warning: "Payment verified but order database isn't configured on the server yet." });
   }
 
   try{
     const { customer, items, subtotal, shipping, total, userId } = orderData || {};
-    await db.collection("orders").doc(razorpay_payment_id).set({
-      orderId: razorpay_payment_id, customer, items, subtotal, shipping, total,
+    await db.collection("orders").doc(finalOrderId).set({
+      orderId: finalOrderId,
+      paymentId: razorpay_payment_id,
+      customer, items, subtotal, shipping, total,
       userId: userId || null,
       method: "razorpay",
       status: "placed",
       placedAt: FieldValue.serverTimestamp()
     });
-    res.json({ verified: true, orderId: razorpay_payment_id });
+    res.json({ verified: true, orderId: finalOrderId });
   }catch(err){
     console.error("Order save after verified payment failed:", err.message);
-    res.json({ verified: true, orderId: razorpay_payment_id, warning: "Payment succeeded but saving order details failed — contact support with your payment ID." });
+    res.json({ verified: true, orderId: finalOrderId, warning: "Payment succeeded but saving order details failed." });
   }
 });
 
