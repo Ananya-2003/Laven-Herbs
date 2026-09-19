@@ -481,6 +481,29 @@ function openPDP(id){
         <span class="pdp-size">${p.size}</span>
         ${isComingSoon ? `<div class="pdp-price pdp-price-soon">Price revealed at launch</div>` : `<div class="pdp-price">${p.mrp ? `<span class="pdp-mrp">${fmt(p.mrp)}</span>` : ""}${fmt(p.price)}</div>`}
         <p class="pdp-desc">${p.description}</p>
+        
+        ${p.benefits && p.benefits.length ? `
+          <div class="pdp-benefits">
+            <h4>Key Benefits</h4>
+            <ul>
+              ${p.benefits.map(b => `<li>${b}</li>`).join("")}
+            </ul>
+          </div>
+        ` : ""}
+
+        ${p.perfectFor ? `
+          <div class="pdp-perfect-for">
+            <strong>Perfect for:</strong> ${p.perfectFor}
+          </div>
+        ` : ""}
+
+        ${p.howToUse ? `
+          <div class="pdp-how-to">
+            <h4>How to Use</h4>
+            <p>${p.howToUse}</p>
+          </div>
+        ` : ""}
+
         <div class="pdp-ingredients">${p.ingredients.map(i=>`<span>${i}</span>`).join("")}</div>
         <div class="pdp-qty-row">
           ${p.inStock ? `
@@ -627,6 +650,7 @@ function renderHome(){
     <span>VITAMIN C</span><span>•</span><span>LAVENDER</span><span>•</span><span>ALOE VERA</span><span>•</span>
     <span>TEA TREE</span><span>•</span><span>SHEA BUTTER</span><span>•</span><span>ROSEMARY</span><span>•</span>
   </div></div>
+
 
   <section class="section container">
     <div class="section-head reveal">
@@ -855,21 +879,6 @@ function wireShopPage(params){
   draw();
 }
 
-// function founderBlock(f, idx){
-//   return `
-//   <div class="founder-block reveal">
-//     <div class="founder-photo tint-${idx % 2 === 0 ? 'lavender' : 'citrus'}">
-//       <svg viewBox="0 0 100 130" fill="none"><path d="M50 10c-18 0-30 14-30 32 0 22 14 40 30 40s30-18 30-40c0-18-12-32-30-32z" stroke="currentColor" stroke-width="1.6" opacity=".55"/><path d="M20 128c0-22 13-38 30-38s30 16 30 38" stroke="currentColor" stroke-width="1.6" opacity=".55"/></svg>
-//     </div>
-//     <div>
-//       <span class="founder-eyebrow">${idx === 0 ? "The Founder" : "The Co-Founder"}</span>
-//       <h3>${f.name}</h3>
-//       <span class="founder-role">${f.role}</span>
-//       <p class="founder-quote">"${f.quote}"</p>
-//       <div class="founder-bio">${f.bio.map(p=>`<p>${p}</p>`).join("")}</div>
-//     </div>
-//   </div>`;
-// }
 
 function founderBlock(f, idx){
   return `
@@ -1342,117 +1351,162 @@ function renderOrderSuccess(){
   </section>`;
 }
 
-// function wireCheckoutPage(){
-//   const form = $("#checkoutForm");
-//   if(!form) return;
+function renderAdmin(){
+  return `
+  <section class="section container admin-page-section">
+    <div class="admin-check-loading" id="adminCheckLoading">
+      <p>Checking access…</p>
+    </div>
+    <div id="adminContent" style="display:none">
+      <div class="admin-header">
+        <h1>Order Management</h1>
+        <button class="btn btn-outline" id="adminLogoutBtn">Log Out</button>
+      </div>
+      <div class="admin-filters">
+        <button class="filter-chip active" data-status="all">All</button>
+        <button class="filter-chip" data-status="placed">Placed</button>
+        <button class="filter-chip" data-status="processing">Processing</button>
+        <button class="filter-chip" data-status="shipped">Shipped</button>
+        <button class="filter-chip" data-status="delivered">Delivered</button>
+      </div>
+      <div id="adminOrdersList" class="admin-orders-list"></div>
+    </div>
+    <div id="adminDenied" style="display:none" class="admin-denied">
+      <h2>Access Restricted</h2>
+      <p>This page is for Laven Herbs team members only.</p>
+      <a href="#/" data-link class="btn btn-primary">Back to Home</a>
+    </div>
+  </section>`;
+}
 
-//   function applyCheckoutAutofill(user){
-//     if(!user) return;
-//     if(user.displayName) form.querySelector('[name="name"]').value = user.displayName;
-//     if(user.email) form.querySelector('[name="email"]').value = user.email;
+function wireAdmin(){
+  const loadingEl = document.getElementById('adminCheckLoading');
+  const contentEl = document.getElementById('adminContent');
+  const deniedEl = document.getElementById('adminDenied');
 
-//     firebase.firestore().collection('users').doc(user.uid).collection('addresses')
-//       .orderBy('updatedAt', 'desc').limit(1).get()
-//       .then(snap => {
-//         if(!snap.empty){
-//           const addr = snap.docs[0].data();
-//           if(addr.name) form.querySelector('[name="name"]').value = addr.name;
-//           if(addr.phone) form.querySelector('[name="phone"]').value = addr.phone;
-//           if(addr.address) form.querySelector('[name="address"]').value = addr.address;
-//           if(addr.city) form.querySelector('[name="city"]').value = addr.city;
-//           if(addr.state) form.querySelector('[name="state"]').value = addr.state;
-//           if(addr.pincode) form.querySelector('[name="pincode"]').value = addr.pincode;
-//         }
-//       })
-//       .catch(err => console.warn('Could not load saved address for autofill:', err));
-//   }
+  function showDenied(){
+    loadingEl.style.display = 'none';
+    deniedEl.style.display = 'block';
+  }
 
-//   if(firebase.auth().currentUser){
-//     applyCheckoutAutofill(firebase.auth().currentUser);
-//   }else{
-//     const unsubscribe = firebase.auth().onAuthStateChanged(function(user){
-//       unsubscribe();
-//       applyCheckoutAutofill(user);
-//     });
-//   }
+  let currentFilter = 'all';
+  let allOrdersCache = [];
 
-//   $$(".radio-card").forEach(card => {
-//     card.addEventListener("click", () => {
-//       $$(".radio-card").forEach(c => c.classList.remove("selected"));
-//       card.classList.add("selected");
-//     });
-//   });
+  function renderOrdersList(){
+    const list = document.getElementById('adminOrdersList');
+    const filtered = currentFilter === 'all' ? allOrdersCache : allOrdersCache.filter(o => o.status === currentFilter);
+    if(filtered.length === 0){
+      list.innerHTML = '<p class="account-empty-note">No orders in this view.</p>';
+      return;
+    }
+    list.innerHTML = filtered.map(o => {
+      const date = o.placedAt && o.placedAt.toDate ? o.placedAt.toDate().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+      const itemsText = (o.items||[]).map(i => {
+        const p = typeof findProduct === 'function' ? findProduct(i.id) : null;
+        return i.qty + '× ' + (p ? p.name : i.id);
+      }).join(', ');
+      return `
+      <div class="admin-order-card" data-order-id="${o.orderId}">
+        <div class="admin-order-top">
+          <div>
+            <div class="admin-order-id">#${o.orderId}</div>
+            <div class="admin-order-date">${date}</div>
+          </div>
+          <span class="account-order-status status-${o.status||'placed'}">${(o.status||'placed')}</span>
+        </div>
+        <div class="admin-order-customer">${o.customer ? o.customer.name : '—'} · ${o.customer ? o.customer.phone : ''}</div>
+        <div class="admin-order-address">${o.customer ? [o.customer.address, o.customer.city, o.customer.state, o.customer.pincode].filter(Boolean).join(', ') : ''}</div>
+        <div class="admin-order-items">${itemsText}</div>
+        <div class="admin-order-bottom">
+          <div class="admin-order-total">₹${(o.total||0).toLocaleString('en-IN')} · ${o.method === 'cod' ? 'COD' : 'Razorpay'}</div>
+          <select class="admin-status-select" data-order-id="${o.orderId}">
+            <option value="placed" ${o.status==='placed'?'selected':''}>Placed</option>
+            <option value="processing" ${o.status==='processing'?'selected':''}>Processing</option>
+            <option value="shipped" ${o.status==='shipped'?'selected':''}>Shipped</option>
+            <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
+          </select>
+        </div>
+      </div>`;
+    }).join('');
 
-//   $("#payNowBtn").addEventListener("click", async () => {
-//     const currentUser = firebase.auth().currentUser;
-//     if (!currentUser) {
-//       showToast("Please log in or sign up to complete your order.", false);
-//       localStorage.setItem("laven_redirect_after_login", "#/checkout");
-//       navigate("#/login");
-//       return;
-//     }
+    document.querySelectorAll('.admin-status-select').forEach(sel => {
+      sel.addEventListener('change', async (e) => {
+        const orderId = e.target.dataset.orderId;
+        const newStatus = e.target.value;
+        try{
+          await firebase.firestore().collection('orders').doc(orderId).update({ status: newStatus });
+          const order = allOrdersCache.find(o => o.orderId === orderId);
+          if(order) order.status = newStatus;
+          showToast(`Order #${orderId} marked as ${newStatus}`);
+          renderOrdersList();
+        }catch(err){
+          console.error(err);
+          showToast('Could not update order status — check your admin access.', false);
+        }
+      });
+    });
+  }
 
-//     if(!form.reportValidity()) return;
-//     const fd = new FormData(form);
-//     const customer = Object.fromEntries(fd.entries());
-//     const payMethod = form.querySelector('input[name="pay"]:checked').value;
-//     const subtotal = Cart.subtotal();
-//     const shipping = subtotal >= 499 ? 0 : 49;
-//     const total = subtotal + shipping;
-//     const btn = $("#payNowBtn");
-//     const originalLabel = btn.textContent;
-//     const itemsSnapshot = Cart.items.map(i => ({ ...i }));
+  function loadAllOrders(){
+    firebase.firestore().collection('orders').get()
+      .then(snap => {
+        allOrdersCache = snap.docs.map(d => d.data());
+        allOrdersCache.sort((a,b) => ((b.placedAt&&b.placedAt.toMillis)?b.placedAt.toMillis():0) - ((a.placedAt&&a.placedAt.toMillis)?a.placedAt.toMillis():0));
+        renderOrdersList();
+      })
+      .catch(err => {
+        console.error('Could not load orders:', err);
+        document.getElementById('adminOrdersList').innerHTML = '<p class="account-empty-note">Could not load orders.</p>';
+      });
+  }
 
-//     if(payMethod === "cod"){
-//       const orderId = "LH-" + Date.now().toString().slice(-8);
-//       btn.disabled = true;
-//       btn.textContent = "Placing order…";
-//       try{
-//         const res = await fetch(`${RAZORPAY_CONFIG.API_BASE}/api/orders/cod`, {
-//           method: "POST",
-//           headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
-//           body: JSON.stringify({ orderId, customer, items: itemsSnapshot, subtotal, shipping, total, userId: currentUser.uid })
-//         });
-//         const data = await res.json();
-//         if(!data.success) throw new Error(data.error || "Could not place order.");
-//         lastOrder = { id: orderId, method: "cod", customer, items: itemsSnapshot, subtotal, shipping, total, placedAt: Date.now() };
-//         Cart.clear();
-//         navigate(`#/order-success`);
-//       }catch(err){
-//         console.error(err);
-//         showToast("Could not place your order. Please try again.", false);
-//         btn.disabled = false;
-//         btn.textContent = originalLabel;
-//       }
-//       return;
-//     }
+  function checkAdminAndLoad(user){
+    if(!user){
+      navigate('#/login');
+      return;
+    }
+    firebase.firestore().collection('admins').doc(user.uid).get()
+      .then(doc => {
+        if(doc.exists){
+          loadingEl.style.display = 'none';
+          contentEl.style.display = 'block';
+          loadAllOrders();
+        }else{
+          showDenied();
+        }
+      })
+      .catch(err => {
+        console.error('Admin check failed:', err);
+        showDenied();
+      });
+  }
 
-//     btn.disabled = true;
-//     btn.textContent = "Processing…";
-//     try{
-//       await LavenCheckout.pay({
-//         amountInRupees: total,
-//         customer,
-//         orderData: { customer, items: itemsSnapshot, subtotal, shipping, total, userId: currentUser.uid },
-//         onSuccess: (orderId) => {
-//           lastOrder = { id: orderId, method: "razorpay", customer, items: itemsSnapshot, subtotal, shipping, total, placedAt: Date.now() };
-//           Cart.clear();
-//           navigate(`#/order-success`);
-//         },
-//         onFailure: (msg) => {
-//           showToast(msg || "Payment could not be completed.", false);
-//           btn.disabled = false;
-//           btn.textContent = originalLabel;
-//         }
-//       });
-//     }catch(err){
-//       console.error(err);
-//       showToast("Payment gateway is having a moment. Please try again.", false);
-//       btn.disabled = false;
-//       btn.textContent = originalLabel;
-//     }
-//   });
-// }
+  if(firebase.auth().currentUser){
+    checkAdminAndLoad(firebase.auth().currentUser);
+  }else{
+    const unsub = firebase.auth().onAuthStateChanged(user => {
+      unsub();
+      checkAdminAndLoad(user);
+    });
+  }
+
+  document.querySelectorAll('.admin-filters .filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.admin-filters .filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentFilter = chip.dataset.status;
+      renderOrdersList();
+    });
+  });
+
+  const logoutBtn = document.getElementById('adminLogoutBtn');
+  if(logoutBtn){
+    logoutBtn.addEventListener('click', async () => {
+      await window.LavenAuth.logout();
+      navigate('#/');
+    });
+  }
+}
 
 function wireCheckoutPage(){
   const form = $("#checkoutForm");
@@ -2260,6 +2314,7 @@ const routes = {
   "account": { render: renderAccount, wire: wireAccount },
   "login": { render: renderLogin, wire: wireLogin },
   "signup": { render: renderSignup, wire: wireSignup },
+  "admin": { render: renderAdmin, wire: wireAdmin },
   "404": { render: render404 }
 };
 

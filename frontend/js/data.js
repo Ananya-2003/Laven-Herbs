@@ -11,202 +11,207 @@
    falls back to the illustrated version — nothing breaks.
    ========================================================= */
 
-// const PRODUCTS = [
-//   {
-//     id: "vit-c-scrub",
-//     name: "Vitamin C Skin Brightening Face Scrub",
-//     photo: "assets/product_images/facescrub.png",
-//     size: "500ml",
-//     price: 299,
-//     mrp: 399,
-//     category: "Face Care",
-//     badge: "Bestseller",
-//     tint: "citrus",
-//     short: "Gently exfoliate to reveal visibly brighter, healthier-looking skin.",
-//     description: "Vitamin C scrub acts as a natural exfoliant, preventing free radical damage and sunburn. It also nourishes and softens skin while gently buffing away dullness, revealing a naturally radiant, even-toned complexion underneath.",
-//     ingredients: ["Vitamin C", "Walnut Shell Powder", "Orange Peel Extract", "Aloe Vera"],
-//     inStock: true
-//   },
-//   {
-//     id: "lavender-cream",
-//     name: "Lavender Face Massage Cream with Vitamin C",
-//     photo: "assets/product_images/facecream.png",
-//     size: "500ml",
-//     price: 199,
-//     mrp: 249,
-//     category: "Face Care",
-//     badge: "New",
-//     tint: "lavender",
-//     short: "Lavender to relax, Vitamin C to reveal. Calm your skin, brighten your glow.",
-//     description: "This cream offers dual benefits: it brightens complexion and soothes skin. Vitamin C, a powerful antioxidant, evens skin tone and boosts collagen, while Lavender provides calming, anti-inflammatory properties that reduce redness and support restful skin renewal.",
-//     ingredients: ["Lavender Extract", "Vitamin C", "Shea Butter", "Chamomile"],
-//     inStock: true
-//   },
-//   {
-//     id: "aloe-tea-tree",
-//     name: "Aloe Vera Gel with Tea Tree Oil & Vitamin E",
-//     photo: "assets/product_images/aloe-vera-cosmetic-cream-white-surface.jpg",
-//     size: "500ml",
-//     price: 299,
-//     mrp: 349,
-//     category: "Face Care",
-//     badge: null,
-//     tint: "citrus",
-//     short: "Aloe to cool, Tea Tree to clear, Vitamin E to repair.",
-//     description: "Aloe Vera, Vitamin E, and Tea Tree oil combine to create a potent, versatile remedy. This blend soothes and hydrates while effectively treating acne and scalp issues. Aloe offers lightweight hydration, Vitamin E provides antioxidant repair, and Tea Tree keeps breakouts in check.",
-//     ingredients: ["Aloe Vera", "Tea Tree Oil", "Vitamin E"],
-//     inStock: true
-//   },
-//   {
-//     id: "de-tan-pack",
-//     name: "De-Tan Face Pack for Radiant & Glowing Skin",
-//     photo: "assets/product_images/Detan.jpg",
-//     size: "500ml",
-//     price: 299,
-//     mrp: 349,
-//     category: "Face Care",
-//     badge: null,
-//     tint: "lavender",
-//     short: "De-tan facial treatment that fades pigmentation, no harsh bleach.",
-//     description: "De-tan face packs are specialized skincare treatments that address sun damage. They gently exfoliate and fade pigmentation, restoring natural skin tone and providing an instant glow without harsh bleaching chemicals.",
-//     ingredients: ["Papaya Extract", "Multani Mitti", "Turmeric", "Sandalwood"],
-//     inStock: true
-//   },
-//   {
-//     id: "vit-c-serum",
-//     name: "Face Serum with 20% Vitamin C & Niacinamide",
-//     photo: "assets/product_images/healthy-argan-oil-composition.jpg",
-//     size: "30ml",
-//     price: 449,
-//     mrp: 549,
-//     category: "Face Care",
-//     badge: "Coming Soon",
-//     tint: "citrus",
-//     short: "Dermatologist-recommended powerhouse duo for brighter, even-toned skin.",
-//     description: "Vitamin C brightens dull skin and fades hyperpigmentation, while Niacinamide minimizes pores, controls oil and repairs the skin barrier. This combination delivers glowing, even-toned, and protected skin.",
-//     ingredients: ["20% Vitamin C", "Niacinamide", "Hyaluronic Acid"],
-//     inStock: false
-//   },
-//   {
-//     id: "shea-moisturizer",
-//     name: "Shea Butter Moisturizer for Dry Skin",
-//     photo: "assets/product_images/sheabutter.png",
-//     size: "200ml",
-//     price: 249,
-//     mrp: 299,
-//     category: "Body Care",
-//     badge: null,
-//     tint: "cream",
-//     short: "A deeply nourishing body butter with sage, shea, and cocoa.",
-//     description: "A deeply nourishing body butter with sage, shea, and cocoa for intensely soft skin. Shea butter is rich in fatty acids and vitamins — it melts into dry skin, repairs the outer barrier, and locks in deep moisture without feeling overly sticky.",
-//     ingredients: ["Shea Butter", "Cocoa Butter", "Sage Extract"],
-//     inStock: true
-//   },
-//   {
-//     id: "rosemary-serum",
-//     name: "Rosemary Scalp Serum",
-//     photo: "assets/product_images/scalpoil.png",
-//     size: "50ml",
-//     price: 349,
-//     mrp: 399,
-//     category: "Hair Care",
-//     badge: "Coming Soon",
-//     tint: "sage",
-//     short: "A stimulating scalp serum to support healthy hair growth.",
-//     description: "A stimulating scalp serum with rosemary and peppermint to support healthy hair growth. Rosemary improves circulation at the follicle while peppermint delivers a cooling, invigorating finish.",
-//     ingredients: ["Rosemary Oil", "Peppermint Oil", "Castor Oil"],
-//     inStock: false
-//   },
-//   {
-//     id: "bridal-facial-kit",
-//     name: "Special Facial Kit for Men & Women — Bridal Glow",
-//     photo: "assets/product_images/facialkitt.jpg",
-//     size: "4-piece · 100ml",
-//     price: 699,
-//     mrp: 899,
-//     category: "Face Kit",
-//     badge: "Face Kit",
-//     tint: "lavender",
-//     short: "Our signature quartet for radiant, hydrated, bridal-ready skin.",
-//     description: "Our signature quartet — Lavender Face Massage Cream, Vitamin C Brightening Face Scrub, Aloe Vera Gel with Tea Tree & Vitamin E, and our De-Tan Face Pack with Papaya — bundled for a complete at-home bridal glow ritual.",
-//     ingredients: ["Vitamin C", "Lavender", "Aloe Vera", "Papaya Extract"],
-//     inStock: true
-//   }
-// ];
-
 
 const PRODUCTS = [
+  // {
+  //   id: "facial-kit",
+  //   name: "Facial Kit",
+  //   photo: "assets/product_images/Facial-kit.jpeg",
+  //   size: "100g (4×25g)",
+  //   price: 249,
+  //   mrp: 499,
+  //   category: "Face Kit",
+  //   badge: "Face Kit",
+  //   tint: "lavender",
+  //   short: "Your complete 4-step ritual — scrub, massage cream, gel, and face pack in one kit.",
+  //   description: "A complete skincare ritual in four 25g jars: Face Scrub to exfoliate, Massage Cream to nourish, Aloe Vera Gel to soothe, and our Calming Glow Face Pack to finish. Everything you need for radiant, cared-for skin in one beautifully packaged kit.",
+  //   ingredients: ["Lavender", "Shea Butter", "Tea Tree Oil", "Kaolin Clay"],
+  //   inStock: true
+  // },
+  // {
+  //   id: "lavender-scrub",
+  //   name: "Lavender Face Scrub",
+  //   photo: "assets/product_images/Lavender face scrub.jpeg",
+  //   size: "400g",
+  //   price: 349,
+  //   category: "Face Care",
+  //   badge: "Coming Soon",
+  //   tint: "lavender",
+  //   short: "A gentle lavender-infused scrub that exfoliates without stripping skin.",
+  //   description: "Our Lavender Scrub gently buffs away dullness and impurities while calming lavender extract soothes skin as it exfoliates. Regular use reveals a smoother, more even-toned complexion — without any harsh, stripping feeling.",
+  //   ingredients: ["Lavender", "Walnut Shell Powder", "Aloe Vera"],
+  //   inStock: false
+  // },
+  // {
+  //   id: "shea-almond-cream",
+  //   name: "Shea Butter with Almond Oil Massage Cream",
+  //   photo: "assets/product_images/Massagecream.jpeg",
+  //   size: "400g",
+  //   price: 399,
+  //   category: "Face Care",
+  //   badge: "Coming Soon",
+  //   tint: "cream",
+  //   short: "Rich, nourishing massage cream blending shea butter and almond oil.",
+  //   description: "This deeply nourishing massage cream combines shea butter's intense moisture with almond oil's lightweight, fast-absorbing softness. Massage into skin for a calming ritual that leaves it supple, hydrated, and visibly healthier.",
+  //   ingredients: ["Shea Butter", "Almond Oil", "Lavender"],
+  //   inStock: false
+  // },
+  // {
+  //   id: "tea-tree-aloe-gel",
+  //   name: "Tea Tree Aloe Vera Gel",
+  //   photo: "assets/product_images/Teatree-aloegel.jpeg",
+  //   size: "400g",
+  //   price: 299,
+  //   category: "Face Care",
+  //   badge: "Coming Soon",
+  //   tint: "sage",
+  //   short: "Cooling aloe vera gel with clarifying tea tree oil.",
+  //   description: "A lightweight, fast-absorbing gel that combines soothing aloe vera with clarifying tea tree oil. Perfect for calming irritation, hydrating without heaviness, and keeping breakouts in check.",
+  //   ingredients: ["Tea Tree Oil", "Aloe Vera", "Vitamin E"],
+  //   inStock: false
+  // },
+  // {
+  //   id: "kaolin-clay-pack",
+  //   name: "Kaolin Clay Calm & Glow Face Pack",
+  //   photo: "assets/product_images/Kaolin clay facepack.jpeg",
+  //   size: "250g",
+  //   price: 349,
+  //   category: "Face Care",
+  //   badge: "Coming Soon",
+  //   tint: "cream",
+  //   short: "Mineral-rich kaolin clay pack for a calm, radiant glow.",
+  //   description: "Our Calm & Glow Face Pack uses gentle kaolin clay to draw out impurities and excess oil without over-drying. Skin is left feeling clean, balanced, and visibly more radiant after every use.",
+  //   ingredients: ["Kaolin Clay", "Lavender", "Aloe Vera"],
+  //   inStock: false
+  // }
   {
-    id: "facial-kit",
-    name: "Facial Kit",
-    photo: "assets/product_images/Facial-kit.jpeg",
-    size: "100g (4×25g)",
-    price: 249,
-    mrp: 499,
-    category: "Face Kit",
-    badge: "Face Kit",
-    tint: "lavender",
-    short: "Your complete 4-step ritual — scrub, massage cream, gel, and face pack in one kit.",
-    description: "A complete skincare ritual in four 25g jars: Face Scrub to exfoliate, Massage Cream to nourish, Aloe Vera Gel to soothe, and our Calming Glow Face Pack to finish. Everything you need for radiant, cared-for skin in one beautifully packaged kit.",
-    ingredients: ["Lavender", "Shea Butter", "Tea Tree Oil", "Kaolin Clay"],
-    inStock: true
-  },
-  {
-    id: "lavender-scrub",
-    name: "Lavender Face Scrub",
-    photo: "assets/product_images/Lavender face scrub.jpeg",
-    size: "400g",
-    price: 349,
-    category: "Face Care",
-    badge: "Coming Soon",
-    tint: "lavender",
-    short: "A gentle lavender-infused scrub that exfoliates without stripping skin.",
-    description: "Our Lavender Scrub gently buffs away dullness and impurities while calming lavender extract soothes skin as it exfoliates. Regular use reveals a smoother, more even-toned complexion — without any harsh, stripping feeling.",
-    ingredients: ["Lavender", "Walnut Shell Powder", "Aloe Vera"],
-    inStock: false
-  },
-  {
-    id: "shea-almond-cream",
-    name: "Shea Butter with Almond Oil Massage Cream",
-    photo: "assets/product_images/Massagecream.jpeg",
-    size: "400g",
-    price: 399,
-    category: "Face Care",
-    badge: "Coming Soon",
-    tint: "cream",
-    short: "Rich, nourishing massage cream blending shea butter and almond oil.",
-    description: "This deeply nourishing massage cream combines shea butter's intense moisture with almond oil's lightweight, fast-absorbing softness. Massage into skin for a calming ritual that leaves it supple, hydrated, and visibly healthier.",
-    ingredients: ["Shea Butter", "Almond Oil", "Lavender"],
-    inStock: false
-  },
-  {
-    id: "tea-tree-aloe-gel",
-    name: "Tea Tree Aloe Vera Gel",
-    photo: "assets/product_images/Teatree-aloegel.jpeg",
-    size: "400g",
-    price: 299,
-    category: "Face Care",
-    badge: "Coming Soon",
-    tint: "sage",
-    short: "Cooling aloe vera gel with clarifying tea tree oil.",
-    description: "A lightweight, fast-absorbing gel that combines soothing aloe vera with clarifying tea tree oil. Perfect for calming irritation, hydrating without heaviness, and keeping breakouts in check.",
-    ingredients: ["Tea Tree Oil", "Aloe Vera", "Vitamin E"],
-    inStock: false
-  },
-  {
-    id: "kaolin-clay-pack",
-    name: "Kaolin Clay Calm & Glow Face Pack",
-    photo: "assets/product_images/Kaolin clay facepack.jpeg",
-    size: "250g",
-    price: 349,
-    category: "Face Care",
-    badge: "Coming Soon",
-    tint: "cream",
-    short: "Mineral-rich kaolin clay pack for a calm, radiant glow.",
-    description: "Our Calm & Glow Face Pack uses gentle kaolin clay to draw out impurities and excess oil without over-drying. Skin is left feeling clean, balanced, and visibly more radiant after every use.",
-    ingredients: ["Kaolin Clay", "Lavender", "Aloe Vera"],
-    inStock: false
-  }
+  id: "facial-kit",
+  name: "The Complete Facial Kit",
+  category: "Face Kit",
+  size: "100g (4 × 25g jars)",
+  price: 249,
+  mrp: 499,
+  inStock: true,
+  badge: "Bestseller",
+  tint: "lavender",
+  photo: "assets/product_images/Facial-kit.jpeg",
+  
+  short: "A salon-quality facial at home in 4 easy steps.",
+  
+  description: "Everything you need for a complete at-home facial — carefully curated in 4 numbered jars. From deep cleansing to a final glow pack, this is the full salon ritual in a box.",
+  
+  benefits: [
+    "Salon-quality facial in 30 minutes",
+    "4 numbered steps — no guesswork",
+    "3 complete facials per kit",
+    "Comes with step-by-step guide"
+  ],
+  
+  perfectFor: "All skin types · Great for gifting & glow prep",
+  howToUse: "Follow the numbered jars in order: 1. Cleanse → 2. Massage → 3. Hydrate → 4. Reveal. Full instructions inside.",
+  keyIngredients: ["Lavender", "Vitamin C", "Aloe Vera", "Shea Butter"],
+  
+  ingredients: ["Lavender", "Vitamin C", "Aloe Vera", "Shea Butter"]
+},
+{
+  id: "lavender-scrub",
+  name: "Lavender Face Scrub",
+  photo: "assets/product_images/Lavender face scrub.jpeg",
+  size: "400g",
+  price: 349,
+  category: "Face Care",
+  badge: "Coming Soon",
+  tint: "lavender",
+  short: "Calming lavender exfoliator for sensitive, tired skin.",
+  description: "A soothing lavender-infused scrub that gently exfoliates while calming redness and irritation. Perfect for sensitive skin that needs a weekly reset without harshness.",
+  benefits: [
+    "Calms redness & irritation",
+    "Gentle exfoliation for sensitive skin",
+    "Lavender aroma relaxes the senses",
+    "Leaves skin soft, not stripped"
+  ],
+  perfectFor: "Sensitive, dry, or reactive skin",
+  howToUse: "Massage onto damp skin in circular motions for 45 seconds. Rinse. Use 2x a week.",
+  keyIngredients: ["Lavender Oil", "Oatmeal", "Chamomile", "Shea Butter"],
+  ingredients: ["Lavender", "Walnut Shell Powder", "Aloe Vera"],
+  inStock: false
+},
+{
+  id: "shea-almond-cream",
+  name: "Shea Butter + Almond Oil Massage Cream",
+  photo: "assets/product_images/Massagecream.jpeg",
+  size: "400g",
+  price: 399,
+  category: "Face Care",
+  badge: "Coming Soon",
+  tint: "cream",
+  short: "Deep-nourishing massage cream for dry, dull skin.",
+  description: "A rich, buttery massage cream that melts into skin — delivering intense hydration and a natural glow. Ideal for facial massage, dry patches, and winter care.",
+  benefits: [
+    "Deep hydration without greasiness",
+    "Boosts circulation & natural glow",
+    "Soothes dry patches & flakiness",
+    "Perfect base for facial massage"
+  ],
+  perfectFor: "Dry, mature, or dull skin",
+  howToUse: "Warm a small amount between palms. Massage onto clean face in upward strokes for 10–15 minutes. Wipe off or leave on overnight.",
+  keyIngredients: ["Shea Butter", "Almond Oil", "Vitamin E", "Lavender"],
+  ingredients: ["Shea Butter", "Almond Oil", "Vitamin E", "Lavender"],
+  inStock: false
+},
+{
+  id: "tea-tree-aloe-gel",
+  name: "Tea Tree Aloe Vera Gel",
+  photo: "assets/product_images/Teatree-aloegel.jpeg",
+  size: "400g",
+  price: 299,
+  category: "Face Care",
+  badge: "Coming Soon",
+  tint: "sage",
+  short: "Cooling aloe gel with clarifying tea tree for acne-prone skin.",
+  description: "A lightweight, cooling gel that calms breakouts and soothes irritation. Aloe hydrates while tea tree clarifies — perfect as a daily moisturizer or post-facial mask.",
+  benefits: [
+    "Calms active breakouts & redness",
+    "Lightweight — absorbs in seconds",
+    "Soothes after sun or shaving",
+    "Non-comedogenic — won't clog pores"
+  ],
+  perfectFor: "Oily, acne-prone, or combination skin",
+  howToUse: "Apply a thin layer to clean face. Leave for 10–15 minutes, then wipe off OR leave on overnight. Use daily.",
+  keyIngredients: ["Aloe Vera", "Tea Tree Oil", "Witch Hazel", "Cucumber"],
+  ingredients: ["Tea Tree Oil", "Aloe Vera", "Vitamin E"],
+  inStock: false
+},
+{
+  id: "kaolin-clay-pack",
+  name: "Kaolin Clay Face Pack",
+  category: "Face Care",
+  size: "100g",
+  price: 249,
+  mrp: 499,
+  inStock: true,
+  badge: "Bestseller",
+  tint: "cream",
+  photo: "assets/product_images/Kaolin clay facepack.jpeg",
+
+  short: "Deep-cleansing kaolin clay mask for clear, matte skin.",
+
+  description: "A purifying clay mask that draws out impurities, absorbs excess oil, and refines pores — leaving skin clean, calm, and matte. Formulated with gentle kaolin clay, soothing botanicals, and a hint of lavender to prevent over-drying.",
+
+  benefits: [
+    "Draws out dirt, oil & impurities",
+    "Minimizes the look of pores",
+    "Controls excess oil & shine",
+    "Calms active breakouts",
+    "Leaves skin matte, not tight"
+  ],
+
+  perfectFor: "Oily, combination, and acne-prone skin",
+  howToUse: "Apply an even layer to clean, dry face (avoid eyes). Leave on for 10–15 minutes until dry. Rinse with lukewarm water in circular motions. Use 1–2 times a week.",
+  keyIngredients: ["Kaolin Clay", "Lavender", "Aloe Vera", "Witch Hazel"],
+
+  ingredients: ["Kaolin Clay", "Lavender", "Aloe Vera"]
+}
 ];
 
 // const CATEGORIES = ["All", "Face Care", "Body Care", "Hair Care", "Face Kit"];

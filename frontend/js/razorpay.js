@@ -1,7 +1,7 @@
 const RAZORPAY_CONFIG = {
   KEY_ID: "rzp_test_TNH4Qz4Gy9rHPd",
-  // API_BASE: "http://localhost:4242"
-  API_BASE: "https://laven-herbs.onrender.com"
+  API_BASE: "http://localhost:4242"
+  // API_BASE: "https://laven-herbs.onrender.com"
 };
 
 function loadRazorpayScript(){
